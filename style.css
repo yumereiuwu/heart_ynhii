@@ -1,0 +1,478 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap");
+
+/* Basic reset so things look similar across browsers */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Full-page dreamy background */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #4b1a2a;
+  /* Soft romantic gradient: pink, peach, light purple */
+  background: linear-gradient(135deg, #ffd1dc, #ffe4c4, #f5d0ff);
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Subtle glow layer on top of the gradient */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20px;
+  background: radial-gradient(
+      circle at top,
+      rgba(255, 255, 255, 0.5),
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at bottom,
+      rgba(255, 255, 255, 0.35),
+      transparent 55%
+    );
+  filter: blur(8px);
+  opacity: 0.7;
+  pointer-events: none; /* So it doesn't block clicks */
+  z-index: -1; /* Keep the glow behind everything */
+}
+
+/* Hero section takes full viewport height so the heart stays in the center */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px 40px;
+}
+
+/* Center the heart + arrow block */
+.center-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  z-index: 2; /* Above the glow background and falling hearts */
+  text-align: center;
+}
+
+/* Small combobox above the heart */
+.top-select {
+  margin-bottom: 6px;
+}
+
+.top-select-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 6px 14px rgba(180, 40, 80, 0.18);
+  font-size: 0.86rem;
+  color: #7b2740;
+}
+
+.top-select-caption {
+  opacity: 0.8;
+}
+
+.top-select-control {
+  border: none;
+  background: transparent;
+  font-size: 0.86rem;
+  color: #ff4f7b;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+}
+
+.top-select-control option {
+  color: #4b1a2a;
+}
+
+/* Main big heart in the center */
+.main-heart {
+  /* Bigger, rounder heart */
+  width: min(320px, 70vw);
+  height: min(320px, 70vw);
+  position: relative;
+
+  /* Use flexbox to center the inner text inside the heart */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Heart base (rotated square) */
+  background-color: #ff4f7b;
+  transform: rotate(-45deg) scale(1);
+  transform-origin: center center;
+  border-radius: 32px;
+  /* Soft heartbeat animation */
+  animation: heartbeat 1.4s ease-in-out infinite;
+  box-shadow: 0 18px 35px rgba(180, 40, 80, 0.45);
+  opacity: 0.97;
+  overflow: visible; /* So inner content is never clipped */
+}
+
+/* The two round bumps of the heart */
+.main-heart::before,
+.main-heart::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #ff4f7b;
+  border-radius: 50%;
+}
+
+.main-heart::before {
+  top: -50%;
+  left: 0;
+}
+
+.main-heart::after {
+  left: 50%;
+  top: 0;
+}
+
+/* Text wrapper inside the heart.
+   We rotate it back so the text is straight, not tilted. */
+.heart-inner-text {
+  position: relative;
+  /* counter-rotate so the text is readable */
+  transform: rotate(45deg);
+  text-align: center;
+  padding: 20px;
+  /* Use flex so the 2 lines are always evenly spaced and centered */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  z-index: 1; /* Make sure text is above the heart shapes */
+  top: -12px; /* Slight lift so text sits nicely in the upper-middle */
+}
+
+.heart-inner-text h1 {
+  /* Name line */
+  font-size: clamp(1.4rem, 3.3vw, 2rem);
+  color: #ffeef5; /* soft light pink/white */
+  margin-bottom: 0;
+  /* subtle shadow to separate from the heart background */
+  text-shadow: 0 1px 3px rgba(120, 0, 40, 0.6);
+  white-space: nowrap; /* Keep full name on one line on desktop */
+  user-select: none; /* Avoid blue selection highlight */
+}
+
+.heart-inner-text p {
+  font-size: clamp(1rem, 3vw, 1.3rem);
+  color: #fff7fb;
+  letter-spacing: 2px;
+  text-transform: lowercase;
+  text-shadow: 0 1px 3px rgba(120, 0, 40, 0.7);
+  user-select: none;
+}
+
+/* Scroll arrow button under the heart */
+.scroll-arrow {
+  border: none;
+  background: rgba(255, 255, 255, 0.85);
+  color: #ff4f7b;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 16px rgba(255, 79, 123, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  animation: arrowBounce 1.5s ease-in-out infinite;
+  margin-top: 100px; /* Push arrow further below the heart tip so it doesn't overlap */
+}
+
+.scroll-arrow:hover {
+  transform: translateY(2px) scale(1.03);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 10px 20px rgba(255, 79, 123, 0.4);
+}
+
+@keyframes arrowBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+/* Heartbeat animation (soft, not too strong) */
+@keyframes heartbeat {
+  0% {
+    transform: rotate(-45deg) scale(1);
+  }
+  30% {
+    transform: rotate(-45deg) scale(1.08);
+  }
+  60% {
+    transform: rotate(-45deg) scale(0.98);
+  }
+  100% {
+    transform: rotate(-45deg) scale(1);
+  }
+}
+
+/* Memories / cards section */
+.memories-section {
+  padding: 40px 16px 64px;
+  position: relative;
+  z-index: 2;
+}
+
+.memories-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.sumeru-wrapper {
+  position: relative;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 26px;
+  padding: 26px 20px 28px;
+  box-shadow: 0 18px 40px rgba(180, 40, 80, 0.22);
+  backdrop-filter: blur(6px);
+}
+
+.sumeru-label {
+  position: absolute;
+  top: 14px;
+  left: 18px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #c63d6b;
+  box-shadow: 0 6px 14px rgba(180, 40, 80, 0.25);
+}
+
+.memories-title {
+  text-align: center;
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  margin-bottom: 24px;
+  color: #7b2740;
+}
+
+/* Wrap all cards in a centered column layout */
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Individual memory card */
+.memory-card {
+  /* Soft pink gradient card so white text stands out */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 126, 167, 0.98),
+    rgba(255, 90, 140, 0.98)
+  );
+  border-radius: 20px;
+  padding: 18px 18px 20px;
+  box-shadow: 0 14px 28px rgba(180, 40, 80, 0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transform: translateY(24px);
+  opacity: 0;
+  transition: opacity 0.6s ease, transform 0.6s ease,
+    box-shadow 0.25s ease, translate 0.25s ease;
+}
+
+/* Visible state when scrolled into view (added by JS) */
+.memory-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.memory-card:hover {
+  box-shadow: 0 20px 36px rgba(180, 40, 80, 0.4);
+  translate: 0 -5px;
+}
+
+.memory-image img {
+  width: 100%;
+  display: block;
+  border-radius: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.7); /* small white frame */
+}
+
+.memory-content h3 {
+  font-size: 1.08rem;
+  margin-bottom: 4px;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  /* Slightly handwritten feeling with cursive fallback */
+  font-family: "Segoe UI", "Segoe Script", "Brush Script MT", cursive;
+}
+
+.memory-content p {
+  font-size: 0.96rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Closing romantic French message section */
+.closing-section {
+  padding: 48px 16px 72px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closing-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 22px 26px;
+  border-radius: 24px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.18),
+    rgba(255, 220, 240, 0.32)
+  );
+  box-shadow: 0 18px 40px rgba(180, 40, 80, 0.28);
+  backdrop-filter: blur(10px);
+  text-align: center;
+  /* Dark text for best readability (your request: black) */
+  color: #111111;
+  font-family: "Playfair Display", "Times New Roman", serif;
+  font-style: italic;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+
+  /* Start hidden for fade-in on scroll, JS will add .visible */
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.closing-inner p + p {
+  margin-top: 0.65rem;
+}
+
+.closing-section.visible .closing-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Container for falling hearts (takes full screen) */
+#falling-hearts-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none; /* So clicks pass through to body */
+  overflow: hidden;
+  z-index: 1; /* Behind the main center heart and cards */
+}
+
+/* Base style for each falling heart */
+.falling-heart {
+  position: absolute;
+  top: -40px; /* Start slightly above the visible area */
+  color: #ff7aa2;
+  font-size: 16px;
+  opacity: 0.85;
+  animation-name: fallDown;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+}
+
+/* Falling animation: from top to bottom, fading out a little */
+@keyframes fallDown {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(110vh) translateX(20px);
+    opacity: 0.1;
+  }
+}
+
+/* Small heart created wherever the user clicks */
+.click-heart {
+  position: fixed;
+  color: #ff4f7b;
+  font-size: 20px;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.6);
+  animation: clickHeartPop 0.7s ease-out forwards;
+}
+
+/* Pop + fade animation for click hearts */
+@keyframes clickHeartPop {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(-50%, -70%) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -90%) scale(0.7);
+  }
+}
+
+/* -------- Mobile adjustments (for phones) -------- */
+@media (max-width: 600px) {
+  .hero {
+    padding-top: 24px;
+  }
+
+  .main-heart {
+    /* Slightly smaller heart on very small screens */
+    width: min(260px, 80vw);
+    height: min(260px, 80vw);
+  }
+
+  .heart-inner-text {
+    top: -10px; /* Keep text nicely in the upper-middle on phones */
+  }
+
+  .heart-inner-text h1 {
+    /* Allow name to break into 2 lines if needed on narrow screens */
+    white-space: normal;
+    font-size: 1.25rem;
+  }
+
+  .heart-inner-text p {
+    font-size: 0.9rem;
+    letter-spacing: 1.5px;
+  }
+
+  .memories-section {
+    padding-top: 24px;
+  }
+
+  .memory-card {
+    padding-inline: 14px;
+  }
+}
+
