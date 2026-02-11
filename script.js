@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const scrollArrow = document.getElementById("scroll-arrow");
   const memoriesSection = document.getElementById("memories");
   const bgMusic = document.getElementById("bg-music");
+  const imageModal = document.getElementById("image-modal");
+  const imageModalImg = document.getElementById("image-modal-img");
+  const galleryImages = document.querySelectorAll(".memory-image img");
   // All elements that should fade in on scroll (cards + closing message)
   const revealItems = document.querySelectorAll(
     ".memory-card, .closing-section"
@@ -45,6 +48,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Make cards & closing message fade/slide in when they appear on screen
   setupRevealOnScroll(revealItems);
+
+  // Setup click-to-open for gallery images
+  if (imageModal && imageModalImg && galleryImages.length > 0) {
+    galleryImages.forEach((img) => {
+      img.style.cursor = "zoom-in";
+      img.addEventListener("click", function () {
+        imageModalImg.src = this.src;
+        imageModal.classList.add("open");
+      });
+    });
+
+    // Close when clicking outside the image
+    imageModal.addEventListener("click", function (event) {
+      if (event.target === imageModal) {
+        imageModal.classList.remove("open");
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && imageModal.classList.contains("open")) {
+        imageModal.classList.remove("open");
+      }
+    });
+  }
 
   /**
    * Creates and starts the loop that generates falling hearts.
