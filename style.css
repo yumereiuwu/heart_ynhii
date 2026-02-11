@@ -508,6 +508,14 @@ body::before {
 
   .memory-card {
     padding-inline: 14px;
+    /* On phones we keep cards still; no hover jump */
+    transform: translateY(0);
+  }
+
+  /* Disable hover lift effect on touch devices so ảnh không bị nhảy */
+  .memory-card:hover {
+    box-shadow: 0 14px 28px rgba(180, 40, 80, 0.3);
+    translate: 0;
   }
 }
 
